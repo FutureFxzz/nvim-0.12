@@ -14,8 +14,6 @@ opt.backup = false
 opt.guicursor = ""
 
 vim.opt.termguicolors = true
-vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "#000000" })
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -87,19 +85,6 @@ vim.pack.add({
   },
 })
 
-vim.o.updatetime = 250
-
-vim.api.nvim_create_autocmd("CursorHold", {
-  callback = function()
-    vim.diagnostic.open_float(nil, {
-      focusable = false,
-      severity = vim.diagnostic.severity.ERROR,
-      border = "rounded",
-      source = "always",
-    })
-  end,
-})
-
 vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
 vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
 vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
@@ -118,3 +103,33 @@ vim.lsp.enable("gopls")
 vim.lsp.enable("clangd")
 
 
+vim.pack.add({
+	{ src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
+})
+require("blink.cmp").setup({
+	keymap = { preset = 'default', ["<CR>"] = { "accept", "fallback" } },
+	completion = { documentation = { auto_show = true } },
+	sources = {
+		default = { 'lsp', 'path', 'snippets', 'buffer' },
+	},
+})
+
+vim.pack.add({{ src = "https://github.com/mbbill/undotree" }})
+vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+
+vim.pack.add({
+    { src = "https://github.com/rose-pine/neovim" }
+})
+
+require('rose-pine').setup({
+    disable_background = true, 
+    styles = {
+        italic = false,       
+    },
+})
+
+vim.cmd.colorscheme("rose-pine")
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+vim.api.nvim_set_hl(0, "VertSplit", { bg = "none" })
