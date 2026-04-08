@@ -25,7 +25,6 @@ vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
 
 vim.opt.cursorline = true
-
 vim.api.nvim_set_hl(0, "LineNr", { fg = "#555555" })
 vim.api.nvim_set_hl(0, "CursorLineNr", {
   fg = "#ffffff",
@@ -87,3 +86,35 @@ vim.pack.add({
     end,
   },
 })
+
+vim.o.updatetime = 250
+
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focusable = false,
+      severity = vim.diagnostic.severity.ERROR,
+      border = "rounded",
+      source = "always",
+    })
+  end,
+})
+
+vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+
+vim.lsp.config("clangd", {
+  cmd = { "clangd", "--background-index" },
+    filetypes = { "c", "cpp", "objc", "objcpp" },
+})
+
+vim.lsp.config("gopls", {
+  cmd = { "gopls" },
+  filetypes = { "go" },
+})
+
+vim.lsp.enable("gopls")
+vim.lsp.enable("clangd")
+
+
